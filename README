@@ -1,0 +1,28 @@
+Create an environment:
+    py -3 -m venv venv
+
+
+Activate the environment:
+    venv\Scripts\activate
+
+
+Create requirements.txt:
+    pip3 freeze > requirements.txt
+
+Get all the packages along with dependencies in requirements.txt:
+    pip install -r requirements.txt
+
+
+Run the application:
+    $env:FLASK_APP = "filepond"
+    $env:FLASK_ENV = "development"
+    flask run
+
+
+
+Reset database file:
+-> delete exicsting site.db file
+    python
+    from filepond import db
+    db.create_all()
+    quit()

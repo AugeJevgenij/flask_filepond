@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+
+{% block content%}
+
+<div class="container">
+  <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+
+      <div class="col-6">
+
+        <!-- Name input field -->
+        <div class="form-floating mt-3 mb-3">
+          {{ form.name(class="form-control", placeholder="name",
+          autocomplete="off") }}
+          {{ form.name.label(class="form-control-label") }}
+        </div>
+
+        <!-- Filepond Drag & Drop area -->
+        <input type="file" class="filepond" multiple />
+
+        <!-- Paths radonly input field -->
+        <div class="form-group mb-3">
+          {{ form.image_paths(class="form-control-plaintext", id="static", readonly=true) }}
+        </div>
+
+        {{form.submit(class="btn btn-primary")}}
+
+      </div>
+
+    </fieldset>
+  </form>
+</div>
+
+<script src="../static/filepond_setup.js"></script>
+
+{% endblock %}
