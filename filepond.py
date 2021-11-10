@@ -39,6 +39,7 @@ class EditSampleForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+# Asynchronously uploading files with FilePond
 @app.route("/process", methods=["POST"])
 @app.route("/edit/process", methods=["POST"])
 def process():
@@ -56,6 +57,7 @@ def process():
     return json.dumps({"filename": [f for f in file_names]})
 
 
+# reverting the upload
 @app.route("/revert", methods=["DELETE"])
 @app.route("/edit/revert", methods=["DELETE"])
 def revert():
