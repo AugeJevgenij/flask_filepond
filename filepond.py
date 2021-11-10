@@ -60,7 +60,7 @@ def process():
 @app.route("/edit/revert", methods=["DELETE"])
 def revert():
     upload_dir = "static/images"
-    print(request.data)
+    # print(request.data)
     parsed = json.loads(request.data)
     picture_fn = parsed["filename"][0]
     picture_path = os.path.join(upload_dir, picture_fn)

@@ -44,7 +44,7 @@ FilePond.setOptions({
 const filename_field = document.getElementById("static");
 let files;
 
-if (filename_field.value !== 'default.png'){
+if (filename_field.value !== 'default.png') {
     const myArray = filename_field.value.split(" ");
     files = createFilesArr(myArray);
 } else {
