@@ -4,6 +4,8 @@
 
 <div class="col-6 mt-3">
 
+    <h1>{{ sample.name }}</h1><br>
+
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
         <div class="carousel-indicators">
 
@@ -45,10 +47,16 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-    </div>
+    </div><br>
+
+    <p><em>{{ sample.image_paths }}</em></p>
+
+    <a class="btn btn-primary mb-2" href="{{ url_for('edit', id=sample.id) }}">Edit</a>
+    <form action="{{ url_for('delete', id=sample.id) }}" method="POST">
+        <input class="btn btn-danger" type="submit" value="Delete">
+    </form>
 
 
-    <p>{{ sample.name }}</p>
-    <p>{{ sample.image_paths }}</p>
+</div>
 
-    {% endblock %}
+{% endblock %}

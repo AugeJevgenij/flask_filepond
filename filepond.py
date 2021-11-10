@@ -29,13 +29,18 @@ class Sample(db.Model):
 
 class SampleForm(FlaskForm):
     name = TextField("Name", validators=[Required()])
-    image_paths = TextField(
-        "Paths", validators=[Required()], default="default.png"
-    )
+    image_paths = TextField("Paths", validators=[Required()], default="default.png")
+    submit = SubmitField("Submit")
+
+
+class EditSampleForm(FlaskForm):
+    name = TextField("Name", validators=[Required()])
+    image_paths = TextField("Paths", validators=[Required()], default="default.png")
     submit = SubmitField("Submit")
 
 
 @app.route("/process", methods=["POST"])
+@app.route("/edit/process", methods=["POST"])
 def process():
     upload_dir = "static/images"
     file_names = []
@@ -52,6 +57,7 @@ def process():
 
 
 @app.route("/revert", methods=["DELETE"])
+@app.route("/edit/revert", methods=["DELETE"])
 def revert():
     upload_dir = "static/images"
     print(request.data)
@@ -62,7 +68,6 @@ def revert():
         os.remove(picture_path)
     except:
         print("delete fail: " + picture_path)
-
     return json.dumps({"filename": picture_fn})
 
 
@@ -77,6 +82,21 @@ def new():
     return render_template("new_form.html", form=form)
 
 
+@app.route("/edit/<int:id>", methods=["POST", "GET"])
+def edit(id):
+    sample = Sample.query.filter_by(id=id).first_or_404()
+    form = EditSampleForm()
+    if form.validate_on_submit():
+        sample.name = form.name.data
+        sample.image_paths = form.image_paths.data
+        db.session.commit()
+        return redirect(url_for("home"))
+    elif request.method == "GET":
+        form.name.data = sample.name
+        form.image_paths.data = sample.image_paths
+    return render_template("new_form.html", form=form)
+
+
 @app.route("/sample/<int:id>")
 def sample(id):
     sample = Sample.query.filter_by(id=id).first_or_404()
@@ -84,11 +104,29 @@ def sample(id):
     return render_template("sample.html", sample=sample, img_paths=img_paths)
 
 
+@app.route("/delete/<int:id>", methods=["POST"])
+def delete(id):
+    sample = Sample.query.filter_by(id=id).first_or_404()
+    img_paths = Convert(sample.image_paths)
+    delete_image(img_paths)
+    db.session.delete(sample)
+    db.session.commit()
+
+    return redirect(url_for("home"))
+
+
 @app.route("/", methods=["POST", "GET"])
 def home():
     samples = Sample.query.all()
-
     return render_template("home.html", samples=samples)
+
+
+def delete_image(image_paths):
+    upload_dir = "static/images"
+    for image_path in image_paths:
+        image = os.path.join(upload_dir, image_path)
+        if os.path.exists(image) and os.path.basename(image) != "default.png":
+            os.remove(image)
 
 
 def Convert(string):
